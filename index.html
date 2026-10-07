@@ -13,16 +13,16 @@
 <meta name="theme-color" content="#0D2A5E">
 
 <style>
-:root{--gold:#D4B26D;--cyan:#1FA6E0;--cobalt:#0D2A5E;--txt:#f2f7ff;--mute:#9fb8dc;--pill:linear-gradient(135deg,#15407f,#0D2A5E);--pb:#D4B26D;
+:root{--sat:max(env(safe-area-inset-top,0px),20px);--sab:env(safe-area-inset-bottom,0px);--gold:#D4B26D;--cyan:#1FA6E0;--cobalt:#0D2A5E;--txt:#f2f7ff;--mute:#9fb8dc;--pill:linear-gradient(135deg,#15407f,#0D2A5E);--pb:#D4B26D;
 --maroon:linear-gradient(135deg,#0D2A5E,#123a7a);--mb:#D4B26D;color-scheme:dark;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
+box-sizing:border-box}
+html{height:100%;scroll-padding-top:70px}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;min-height:100vh;font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;color:var(--txt);
+body{margin:0;min-height:100%;font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;color:var(--txt);
 background:#0a2250 radial-gradient(circle at 0% 6%,rgba(31,166,224,.38),transparent 45%),radial-gradient(circle at 100% 60%,rgba(212,178,109,.16),transparent 45%),linear-gradient(180deg,#0a2250,#0b2756 50%,#040e22);
-background-attachment:fixed;padding:14px 12px 30px}
+background-attachment:fixed;padding:calc(14px + var(--sat)) 12px calc(18px + var(--sab))}
 .app{max-width:560px;margin:0 auto}
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;margin:-14px -12px 10px;padding:14px 12px 2px;background:linear-gradient(180deg,#0a2250 82%,rgba(10,34,80,0))}
+.top{position:sticky;top:0;z-index:5;margin:calc(-14px - var(--sat)) -12px 10px;padding:calc(14px + var(--sat)) 12px 2px;background:linear-gradient(180deg,#0a2250 82%,rgba(10,34,80,0))}
 .banner{position:relative;min-height:54px;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,#0D2A5E,#135399);border:2px solid var(--mb);border-radius:999px;padding:4px 12px;box-shadow:0 6px 18px rgba(0,0,0,.4)}
 .logo{width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
 .logo.l{background:radial-gradient(circle,#3a56b0,#1b2a66);border:2px solid #d9a441;color:var(--gold)}
