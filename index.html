@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BMP Data Manager</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BMP Data">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0D2A5E">
+
+<style>
+:root{--gold:#D4B26D;--cyan:#1FA6E0;--cobalt:#0D2A5E;--txt:#f2f7ff;--mute:#9fb8dc;--pill:linear-gradient(135deg,#15407f,#0D2A5E);--pb:#D4B26D;
+--maroon:linear-gradient(135deg,#0D2A5E,#123a7a);--mb:#D4B26D;color-scheme:dark;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100vh;font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;color:var(--txt);
+background:#0a2250 radial-gradient(circle at 0% 6%,rgba(31,166,224,.38),transparent 45%),radial-gradient(circle at 100% 60%,rgba(212,178,109,.16),transparent 45%),linear-gradient(180deg,#0a2250,#0b2756 50%,#040e22);
+background-attachment:fixed;padding:14px 12px 30px}
+.app{max-width:560px;margin:0 auto}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;margin:-14px -12px 10px;padding:14px 12px 2px;background:linear-gradient(180deg,#0a2250 82%,rgba(10,34,80,0))}
+.banner{position:relative;min-height:54px;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,#0D2A5E,#135399);border:2px solid var(--mb);border-radius:999px;padding:4px 12px;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.logo{width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+.logo.l{background:radial-gradient(circle,#3a56b0,#1b2a66);border:2px solid #d9a441;color:var(--gold)}
+.logo.r{background:radial-gradient(circle,#2a58d8,#142a8c);border:2px solid #4c7bff;color:#fff;font-style:italic;font-size:20px}
+.lbl{text-transform:uppercase;letter-spacing:.5px;font-weight:800;font-size:20px;line-height:1.2;text-align:center}.val{margin-left:auto;font-weight:800;font-size:22px;color:var(--gold)}
+.tabs{display:flex;margin:8px 0 4px;padding:3px;border-radius:999px;background:linear-gradient(90deg,#0D2A5E,#0f3573);border:2px solid var(--mb)}
+.tabs button{flex:1;background:transparent;color:#a9c6ea;font-weight:700;font-size:20px;font-family:inherit;padding:6px 0;border-radius:999px;cursor:pointer;border:2px solid transparent}
+.tabs button.on{background:linear-gradient(135deg,#1FA6E0,#1584b8);color:#fff;border-color:#D4B26D}
+.panel{border-radius:28px;padding:14px;margin-bottom:12px;background:linear-gradient(135deg,rgba(18,58,122,.92),rgba(13,42,94,.94) 60%,rgba(9,30,68,.96));border:2px solid #D4B26D;box-shadow:0 8px 22px rgba(0,0,0,.35)}
+.view{display:none}.view.on{display:block}
+.f{width:100%;background:var(--pill);border:1.5px solid var(--pb);border-radius:18px;color:#fff;font-size:18px;padding:14px 16px;outline:0;appearance:none;-webkit-appearance:none;font-family:inherit}
+.f::placeholder{color:#8fa9d0}.f:focus{border-color:var(--cyan)}
+select.f{padding-right:40px}.sel{position:relative}.sel:after{content:"▾";position:absolute;right:18px;top:50%;transform:translateY(-50%);pointer-events:none}
+textarea.f{min-height:110px;font-size:15px;resize:vertical}
+.mt{margin-top:10px}
+.hdr{display:flex;align-items:center;gap:8px;margin:14px 2px 8px}
+.hdr b{flex:1;font-size:15px;letter-spacing:.5px;text-transform:uppercase;color:var(--gold);word-break:break-word}
+.chip{background:var(--maroon);border:2px solid var(--mb);border-radius:999px;color:#fff;font-weight:700;font-size:15px;font-family:inherit;padding:6px 12px;cursor:pointer}
+.item{display:flex;align-items:center;gap:8px;margin-bottom:8px;background:var(--pill);border:2px solid var(--pb);border-radius:16px;padding:6px 6px 6px 14px;font-size:17px;font-weight:600;word-break:break-word}
+.item .tx{flex:1;min-width:0;padding:8px 0}.item .lb{display:block;font-size:12px;color:var(--gold);text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
+.item .x{border:0;background:rgba(0,0,0,.25);color:var(--gold);border-radius:12px;padding:9px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.hlogo{position:absolute;left:8px;top:50%;transform:translateY(-50%);height:40px;width:auto}
+.lg{text-align:center;margin:8px 0 0}.lg img{width:150px;max-width:50%;height:auto}.lg.sm img{width:78px}
+.acts{display:flex;gap:6px;flex-shrink:0}
+.item .ib{border:0;background:rgba(31,166,224,.28);color:#fff;border-radius:12px;padding:9px 11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.ib.eye{padding:9px 12px;display:inline-flex;align-items:center}.ib.eye svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.item .x.sure{background:#b3202c;color:#fff}
+.item.copied{background:#1584b8;border-color:var(--cyan)}
+.tag{font-size:12px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin:12px 2px 6px}
+.empty{text-align:center;color:var(--mute);padding:26px 8px;font-size:16px}
+.seg{display:flex;background:rgba(0,0,0,.28);border:2px solid var(--gold);border-radius:999px;padding:3px;margin-bottom:4px}
+.seg button{flex:1;background:transparent;color:#b4cdee;border:2px solid transparent;border-radius:999px;padding:10px;font-weight:700;font-size:18px;font-family:inherit;cursor:pointer}
+.seg button.on{background:var(--cyan);color:#fff;border-color:var(--gold)}
+label{display:block;margin:8px 4px 4px;color:#b4cdee;font-size:15px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{width:100%;border:0;border-radius:20px;padding:16px;font-weight:800;font-size:26px;font-family:inherit;color:#fff;cursor:pointer;margin-top:14px}
+.btn.save{padding:11px;margin-top:10px;background:linear-gradient(135deg,#e2c283,#D4B26D);color:#0D2A5E}.btn.save:disabled{opacity:.6}
+.btn.alt{background:rgba(255,255,255,.14);border:2px solid #D4B26D;font-size:21px}
+details summary{cursor:pointer;color:var(--gold);font-weight:700;padding:6px 2px}
+.note{font-size:13px;color:var(--mute);margin:6px 2px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);padding:12px 22px;border-radius:999px;font-weight:700;font-size:16px;color:#fff;background:#0D2A5E;border:2px solid var(--gold);opacity:0;pointer-events:none;transition:opacity .2s;max-width:92%;text-align:center;z-index:9}
+.toast.show{opacity:1}.toast.ok{background:#1584b8}.toast.err{background:#b3202c}
+#signin{position:fixed;inset:0;z-index:20;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:linear-gradient(180deg,#0a2250,#040e22)}
+#signin img{width:150px;height:auto}#signin h2{margin:0;color:var(--gold);font-size:22px;letter-spacing:.5px}#signin p{margin:0;color:#b4cdee;font-size:16px;max-width:320px}#signin .btn{max-width:320px}
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer onload="window.initAuth&&initAuth()"></script>
+</head>
+<body>
+<div class="app">
+  <div class="top"><div class="banner"><img class="hlogo" alt="" src="" data-logo><span class="lbl">BMP Data Manager</span></div>
+  <div class="tabs"><button id="tb1" class="on" onclick="showTab(1)">Data Manager</button><button id="tb2" onclick="showTab(2)">New Entry</button></div></div>
+
+  <div class="view on" id="v1"><div class="panel">
+    <div class="sel"><select class="f" id="pick" onchange="onPick()"><option value="">Choose a section</option></select></div>
+    <div class="hdr"><b id="hTitle"></b></div>
+    <div id="data"><div class="empty">Loading…</div></div>
+    <div class="lg" id="lgData"><img alt="BMP Westside" src="" data-logo></div>
+    <button class="btn alt" onclick="doneView()">Done</button>
+  </div></div>
+
+  <div class="view" id="v2"><div class="panel">
+    <div class="seg"><button id="m1" class="on" onclick="setMode(1)">Single</button><button id="m2" onclick="setMode(2)">Multiple</button></div>
+    <label>Section Name</label>
+    <input class="f" id="sec" list="secList" placeholder="Enter Name" autocomplete="off"><datalist id="secList"></datalist>
+    <div id="g1"><label>Data</label><input class="f" id="d1" placeholder="Enter data"></div>
+    <div id="g2" style="display:none">
+      <label>Field 1</label><div class="two"><div class="sel"><select class="f" id="l1" onchange="lblChange(1)"></select></div><input class="f" id="fv1" placeholder="Field Value"></div>
+      <input class="f mt" id="n1" style="display:none" placeholder="Type new field name" oninput="typeFor(1)" autocomplete="off">
+      <label>Field 2</label><div class="two"><div class="sel"><select class="f" id="l2" onchange="lblChange(2)"></select></div><input class="f" id="fv2" placeholder="Field Value"></div>
+      <input class="f mt" id="n2" style="display:none" placeholder="Type new field name" oninput="typeFor(2)" autocomplete="off">
+    </div>
+    <button class="btn save" id="saveBtn" onclick="save()">Save</button>
+    <div class="lg sm"><img alt="BMP Westside" src="" data-logo></div>
+  </div></div>
+</div>
+<div id="signin"><img alt="BMP Westside" src="" data-logo><h2>BMP DATA MANAGER</h2><p id="siMsg">Sign in with your Google account to open your data.</p><button class="btn save" onclick="doSignIn()">Sign in with Google</button></div>
+<div class="toast" id="toast"></div>
+
+<script>
+var LOGO="logo.png";
+document.querySelectorAll("img[data-logo]").forEach(function(i){i.src=LOGO});
+
+var $=function(i){return document.getElementById(i)};
+var rows=[],mode=1,tt,shown={};
+var DEF=["Username","Password","Email","Phone","Account No","URL","PIN","Notes"];
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function toast(m,t){var e=$('toast');e.textContent=m;e.className='toast show '+(t||'');clearTimeout(tt);tt=setTimeout(function(){e.className='toast'},2200)}
+function showTab(n){$('tb1').className=n==1?'on':'';$('tb2').className=n==2?'on':'';$('v1').className='view'+(n==1?' on':'');$('v2').className='view'+(n==2?' on':'')}
+function setMode(n){mode=n;$('m1').className=n==1?'on':'';$('m2').className=n==2?'on':'';$('g1').style.display=n==1?'block':'none';$('g2').style.display=n==2?'block':'none'}
+function isPw(l){return /password/i.test(l||'')}
+function say(m){$('data').innerHTML='<div class="empty">'+esc(m)+'</div>'}
+
+/* ---- Google Sheets API (sign in with Google) ---- */
+var CLIENT_ID="223684600284-gm2s3d5or4ldh4u45ldk3ett4pqsnquj.apps.googleusercontent.com";
+var SHEET_ID="1P1TbxS0Vc-6THkPhetr6A48YHbYKE3t2QiSk8RUXxXQ";
+var SCOPE="https://www.googleapis.com/auth/spreadsheets";
+var BASE="https://sheets.googleapis.com/v4/spreadsheets/"+SHEET_ID;
+var tokenClient=null,token='',fieldList=[];
+function loadTok(){try{var t=JSON.parse(localStorage.getItem('bmpTok')||'null');if(t&&t.exp>Date.now()+60000){token=t.v;return true}}catch(e){}return false}
+function saveTok(v,sec){token=v;try{localStorage.setItem('bmpTok',JSON.stringify({v:v,exp:Date.now()+sec*1000}))}catch(e){}}
+function clearTok(){token='';try{localStorage.removeItem('bmpTok')}catch(e){}}
+function showSignIn(){
+  $('siMsg').textContent=/PASTE_YOUR/.test(CLIENT_ID)?'Add your Google Client ID in index.html first.':'Sign in with your Google account to open your data.';
+  $('signin').style.display='flex';
+}
+function hideSignIn(){$('signin').style.display='none'}
+function initAuth(){
+  if(tokenClient)return true;
+  if(!window.google||!google.accounts||!google.accounts.oauth2)return false;
+  tokenClient=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPE,callback:function(r){
+    if(r&&r.access_token){saveTok(r.access_token,Number(r.expires_in)||3600);hideSignIn();start()}
+    else toast('Sign in was not completed','err');
+  }});
+  return true;
+}
+function doSignIn(){
+  if(/PASTE_YOUR/.test(CLIENT_ID))return toast('Client ID is missing in index.html','err');
+  if(!initAuth())return toast('Google sign-in is still loading. Try again.','err');
+  tokenClient.requestAccessToken({prompt:''});
+}
+async function gfetch(path,opt){
+  opt=opt||{};opt.headers=Object.assign({'Authorization':'Bearer '+token},opt.headers||{});
+  var r=await fetch(BASE+path,opt);
+  if(r.status===401){clearTok();showSignIn();throw{code:'auth'}}
+  var j={};try{j=await r.json()}catch(e){}
+  if(!r.ok)throw{code:'api',message:(j.error&&j.error.message)||('Error '+r.status)};
+  return j;
+}
+function why(e){
+  if(e&&e.code==='auth')return 'Please sign in with Google.';
+  if(e instanceof TypeError)return 'No connection to Google. Check your internet.';
+  return (e&&e.message)||'Something went wrong';
+}
+async function loadRows(){
+  var p=await gfetch('/values:batchGet?ranges=Data!A%3AC&ranges=Fields!A%3AA&valueRenderOption=FORMATTED_VALUE');
+  var vr=p.valueRanges||[],v=(vr[0]&&vr[0].values)||[];rows=[];
+  fieldList=((vr[1]&&vr[1].values)||[]).slice(1).map(function(r){return String(r&&r[0]!=null?r[0]:'').trim()}).filter(Boolean);
+  var cell=function(r,i){return r&&r[i]!=null?String(r[i]):''};
+  v.forEach(function(r,i){
+    if(i===0)return;
+    var sec=cell(r,0).trim(),val=cell(r,1);
+    if(!sec||!val)return;
+    var o={id:String(i+1),row:i+1,section:sec,value:val,label:cell(r,2).trim(),kind:'',pwLabel:''};
+    if(!o.label&&/:\s*$/.test(val.trim()))o.kind='label';
+    else if(!o.label&&i>1){
+      var q=v[i-1]||[];
+      if(cell(q,0).trim().toLowerCase()===sec.toLowerCase()&&!cell(q,2).trim()&&/:\s*$/.test(cell(q,1).trim()))o.pwLabel=cell(q,1).trim().replace(/:\s*$/,'');
+    }
+    rows.push(o);
+  });
+  refreshLists();renderData();
+}
+async function reload(){
+  try{await loadRows()}catch(e){say(why(e))}
+}
+
+/* ---- data helpers ---- */
+function sections(){var s={};rows.concat(fieldList.map(function(f){return{section:f}})).forEach(function(r){var k=r.section.toLowerCase();if(!s[k])s[k]=r.section});
+  return Object.keys(s).map(function(k){return s[k]}).sort(function(a,b){return a.toLowerCase().localeCompare(b.toLowerCase())})}
+function inSec(n){return rows.filter(function(r){return r.section.toLowerCase()===n.toLowerCase()})}
+function canonical(n){var k=n.toLowerCase(),s=sections();for(var i=0;i<s.length;i++)if(s[i].toLowerCase()===k)return s[i];return n}
+
+function refreshLists(){
+  var cur=$('pick').value,s=sections();
+  $('pick').innerHTML='<option value="">Choose a section</option>'+s.map(function(f){return '<option>'+esc(f)+'</option>'}).join('');
+  if(cur&&s.indexOf(cur)>-1)$('pick').value=cur;
+  $('secList').innerHTML=s.map(function(f){return '<option value="'+esc(f)+'">'}).join('');
+  var l={};DEF.forEach(function(x){l[x]=1});rows.forEach(function(r){if(r.label)l[r.label]=1});
+  fillLabels(Object.keys(l).sort(function(a,b){return a.toLowerCase().localeCompare(b.toLowerCase())}));
+}
+function fillLabels(list){
+  [1,2].forEach(function(n){
+    var el=$('l'+n),cur=el.value;
+    el.innerHTML='<option value="">Select</option>'+list.map(function(x){return '<option>'+esc(x)+'</option>'}).join('')+'<option value="__new">+ Add new</option>';
+    if(cur&&(cur==='__new'||list.indexOf(cur)>-1))el.value=cur;
+    typeFor(n);
+  });
+}
+function getLabel(n){var v=$('l'+n).value;return v==='__new'?$('n'+n).value.trim():v}
+function lblChange(n){$('n'+n).style.display=$('l'+n).value==='__new'?'block':'none';typeFor(n)}
+function typeFor(n){$('fv'+n).type=isPw(getLabel(n))?'password':'text'}
+
+var COPY='<svg viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 017.5 4H16"/></svg>';
+var EYE='<svg viewBox="0 0 24 24"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+var EYEOFF='<svg viewBox="0 0 24 24"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.7 10.7 0 0112 5c6.5 0 10.5 7 10.5 7a17 17 0 01-3.2 3.9M6.6 6.6A17 17 0 001.5 12S5.5 19 12 19a10.5 10.5 0 004.4-1"/><path d="M9.9 9.9a3 3 0 004.2 4.2"/></svg>';
+function item(r){
+  if(r.kind==='label')return '<div class="item"><div class="tx">'+esc(r.value)+'</div></div>';
+  var pw=isPw(r.label)||isPw(r.pwLabel),hid=pw&&!shown[r.id],v=hid?'••••••••':esc(r.value);
+  return '<div class="item"><div class="tx">'+(r.label?'<span class="lb">'+esc(r.label)+'</span>':'')+v+'</div><div class="acts">'
+   +(pw?'<button class="ib eye" data-id="'+r.id+'" onclick="eye(this)" aria-label="'+(hid?'Show':'Hide')+'">'+(hid?EYE:EYEOFF)+'</button>':'')
+   +'<button class="ib eye" data-id="'+r.id+'" onclick="copyRow(this)" aria-label="Copy">'+COPY+'</button></div></div>';
+}
+function eye(b){var id=b.getAttribute('data-id');shown[id]=!shown[id];renderData()}
+function copyRow(b){var id=b.getAttribute('data-id'),r=rows.filter(function(x){return x.id===id})[0];if(r)doCopy(r.value,function(){toast('Copied','ok')})}
+function renderData(){
+  var sec=$('pick').value;
+  $('lgData').style.display=sec?'none':'block';
+  $('hTitle').parentNode.style.display=sec?'flex':'none';
+  if(sec){var v=inSec(sec);$('hTitle').textContent=sec;
+    $('data').innerHTML=v.length?v.map(item).join(''):'<div class="empty">No data in this section yet.</div>'}
+  else{$('hTitle').textContent='';
+    $('data').innerHTML=rows.length?'<div class="empty">Select a section above to view its data.</div>':'<div class="empty">No data yet. Add some in the New Entry tab.</div>'}
+}
+function onPick(){renderData()}
+function doneView(){$('pick').value='';renderData();window.scrollTo({top:0,behavior:'smooth'});reload()}
+function doCopy(t,ok){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,function(){fb(t);ok()})}else{fb(t);ok()}}
+function fb(v){var t=document.createElement('textarea');t.value=v;document.body.appendChild(t);t.select();try{document.execCommand('copy')}catch(e){}document.body.removeChild(t)}
+
+/* ---- save ---- */
+async function save(){
+  var sec=$('sec').value.trim(),btn=$('saveBtn'),add=[];
+  if(!sec)return toast('Please enter a Section Name','err');
+  if(mode==1){var d=$('d1').value.trim();if(!d)return toast('Please enter Data','err');add.push({value:d})}
+  else{[1,2].forEach(function(n){var l=getLabel(n),v=$('fv'+n).value.trim();if(l&&v)add.push({label:l,value:v})});
+    if(!add.length)return toast('Enter at least one Field Name and Value','err')}
+  var isNew=sections().map(function(x){return x.toLowerCase()}).indexOf(sec.toLowerCase())<0;
+  sec=canonical(sec);btn.disabled=true;btn.textContent='Saving…';
+  var post=function(range,vals){return gfetch('/values/'+encodeURIComponent(range)+':append?valueInputOption=RAW&insertDataOption=INSERT_ROWS',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({values:vals})})};
+  try{
+    await post('Data!A1',add.map(function(o){return o.label?[sec,o.value,o.label]:[sec,o.value]}));
+    if(isNew)await post('Fields!A1',[[sec]]);
+    ['d1','fv1','fv2','n1','n2'].forEach(function(i){$(i).value=''});['l1','l2'].forEach(function(i){$(i).value=''});lblChange(1);lblChange(2);
+    toast('Saved','ok');
+    await loadRows();$('pick').value=sec;renderData();
+  }catch(e){toast(why(e),'err')}
+  btn.disabled=false;btn.textContent='Save';
+}
+
+async function start(){
+  say('Loading…');
+  try{await loadRows()}catch(e){if(!(e&&e.code==='auth'))say(why(e))}
+}
+(function(){
+  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});
+  initAuth();
+  if(loadTok())start();else showSignIn();
+})();
+</script>
+</body>
+</html>
