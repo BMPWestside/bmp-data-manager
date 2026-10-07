@@ -18,11 +18,13 @@
 box-sizing:border-box}
 html{height:100%;scroll-padding-top:70px}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;min-height:100%;font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;color:var(--txt);
-background:#0a2250 radial-gradient(circle at 0% 6%,rgba(31,166,224,.38),transparent 45%),radial-gradient(circle at 100% 60%,rgba(212,178,109,.16),transparent 45%),linear-gradient(180deg,#0a2250,#0b2756 50%,#040e22);
-background-attachment:fixed;padding:calc(14px + var(--sat)) 12px calc(18px + var(--sab))}
+html{background:#040e22}
+body{margin:0;min-height:100%;-webkit-font-smoothing:antialiased;font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;color:var(--txt);
+
+padding:calc(26px + var(--sat)) 12px calc(18px + var(--sab))}
+body::before{content:"";position:fixed;left:0;right:0;top:0;bottom:0;z-index:-1;background:#0a2250 radial-gradient(circle at 0% 6%,rgba(31,166,224,.38),transparent 45%),radial-gradient(circle at 100% 60%,rgba(212,178,109,.16),transparent 45%),linear-gradient(180deg,#0a2250,#0b2756 50%,#040e22)}
 .app{max-width:560px;margin:0 auto}
-.top{position:sticky;top:0;z-index:5;margin:calc(-14px - var(--sat)) -12px 10px;padding:calc(14px + var(--sat)) 12px 2px;background:linear-gradient(180deg,#0a2250 82%,rgba(10,34,80,0))}
+.top{position:sticky;top:0;z-index:5;margin:calc(-26px - var(--sat)) -12px 10px;padding:calc(26px + var(--sat)) 12px 2px;background:linear-gradient(180deg,#0a2250 82%,rgba(10,34,80,0))}
 .banner{position:relative;min-height:54px;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,#0D2A5E,#135399);border:2px solid var(--mb);border-radius:999px;padding:4px 12px;box-shadow:0 6px 18px rgba(0,0,0,.4)}
 .logo{width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
 .logo.l{background:radial-gradient(circle,#3a56b0,#1b2a66);border:2px solid #d9a441;color:var(--gold)}
@@ -44,7 +46,7 @@ textarea.f{min-height:110px;font-size:15px;resize:vertical}
 .item{display:flex;align-items:center;gap:8px;margin-bottom:8px;background:var(--pill);border:2px solid var(--pb);border-radius:16px;padding:6px 6px 6px 14px;font-size:17px;font-weight:600;word-break:break-word}
 .item .tx{flex:1;min-width:0;padding:8px 0}.item .lb{display:block;font-size:12px;color:var(--gold);text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
 .item .x{border:0;background:rgba(0,0,0,.25);color:var(--gold);border-radius:12px;padding:9px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
-.hlogo{position:absolute;left:8px;top:50%;transform:translateY(-50%);height:40px;width:auto}
+.hlogo{position:absolute;left:8px;top:50%;margin-top:-20px;height:40px;width:auto}
 .lg{text-align:center;margin:8px 0 0}.lg img{width:150px;max-width:50%;height:auto}.lg.sm img{width:78px}
 .acts{display:flex;gap:6px;flex-shrink:0}
 .item .ib{border:0;background:rgba(31,166,224,.28);color:#fff;border-radius:12px;padding:9px 11px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
@@ -72,7 +74,7 @@ details summary{cursor:pointer;color:var(--gold);font-weight:700;padding:6px 2px
 </head>
 <body>
 <div class="app">
-  <div class="top"><div class="banner"><img class="hlogo" alt="" src="" data-logo><span class="lbl">BMP Data Manager</span></div>
+  <div class="top"><div class="banner"><img class="hlogo" alt="" src="logo-sm.png"><span class="lbl">BMP Data Manager</span></div>
   <div class="tabs"><button id="tb1" class="on" onclick="showTab(1)">Data Manager</button><button id="tb2" onclick="showTab(2)">New Entry</button></div></div>
 
   <div class="view on" id="v1"><div class="panel">
@@ -95,7 +97,7 @@ details summary{cursor:pointer;color:var(--gold);font-weight:700;padding:6px 2px
       <input class="f mt" id="n2" style="display:none" placeholder="Type new field name" oninput="typeFor(2)" autocomplete="off">
     </div>
     <button class="btn save" id="saveBtn" onclick="save()">Save</button>
-    <div class="lg sm"><img alt="BMP Westside" src="" data-logo></div>
+    <div class="lg sm"><img alt="BMP Westside" src="logo-md.png"></div>
   </div></div>
 </div>
 <div id="signin"><img alt="BMP Westside" src="" data-logo><h2>BMP DATA MANAGER</h2><p id="siMsg">Sign in with your Google account to open your data.</p><button class="btn save" onclick="doSignIn()">Sign in with Google</button></div>

@@ -1,5 +1,5 @@
-var C='bmp-dm-v1';
-self.addEventListener('install',function(e){e.waitUntil(caches.open(C).then(function(c){return c.addAll(['./','index.html','logo.png','manifest.webmanifest'])}));self.skipWaiting()});
+var C='bmp-dm-v2';
+self.addEventListener('install',function(e){e.waitUntil(caches.open(C).then(function(c){return c.addAll(['./','index.html','logo.png','logo-sm.png','logo-md.png','manifest.webmanifest'])}));self.skipWaiting()});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(function(x){return x!==C}).map(function(x){return caches.delete(x)}))}));self.clients.claim()});
 self.addEventListener('fetch',function(e){
   if(e.request.method!=='GET'||new URL(e.request.url).origin!==location.origin)return;
